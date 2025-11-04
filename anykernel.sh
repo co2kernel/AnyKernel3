@@ -32,23 +32,10 @@ no_magisk_check=1
 # import functions/variables and setup patching - see for reference (DO NOT REMOVE)
 . tools/ak3-core.sh
 
-kernel_version=$(cat /proc/version | awk -F '-' '{print $1}' | awk '{print $3}')
-case $kernel_version in
-    5.1*) ksu_supported=true ;;
-    6.1*) ksu_supported=true ;;
-    6.6*) ksu_supported=true ;;
-    *) ksu_supported=false ;;
-esac
-
-ui_print " " "  -> ksu_supported: $ksu_supported"
-$ksu_supported || abort "  -> Non-GKI device, abort."
-
+ui_print "Welcome to co2kernel!"
+ui_print " "
+ui_print "Flashing..."
 # boot install
-if [ -L "/dev/block/bootdevice/by-name/init_boot_a" -o -L "/dev/block/by-name/init_boot_a" ]; then
-    split_boot # for devices with init_boot ramdisk
-    flash_boot # for devices with init_boot ramdisk
-else
-    dump_boot # use split_boot to skip ramdisk unpack, e.g. for devices with init_boot ramdisk
-    write_boot # use flash_boot to skip ramdisk repack, e.g. for devices with init_boot ramdisk
-fi
+split_boot
+flash_boot
 ## end boot install
